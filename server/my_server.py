@@ -1,6 +1,7 @@
 import socket
 import json
 import RPC.server.callable as Call
+import RPC.server.response as Response
 import os
 
 class MyServer:
@@ -41,7 +42,20 @@ class MyServer:
                         method = json_dict.method
                         params = json_dict.params
 
-                        res = Call.callable_map[method](params)
+                        try:
+                            result = Call.callable_map[method](params)
+                            resp = Response(result, None)
+                            resp_json = resp.to_json()
+                            conn.sendall(resp_json.encode())
+
+                        except Exception as e:
+                            resp = Response(None, e)
+                            resp_json = resp.to_json()
+                            conn.sendall(resp_json.encode())
+                    
+                    else:
+                        break
+
             finally:
                 conn.close()
 
