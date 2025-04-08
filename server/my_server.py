@@ -1,7 +1,7 @@
 import socket
 import json
-import RPC.server.callable as Call
-import RPC.server.response as Response
+import callable as Call
+from response import Response
 import os
 
 class MyServer:
@@ -11,36 +11,37 @@ class MyServer:
         sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 
         # configure server address
-        server_address = ''
+        server_address = 'localhost'
 
         # bing socket to address
-        sock.bing(server_address)
+        sock.bind(("::1", 8080))
 
         self.socket = sock
+        self.connList = []
 
     def start(self):
         
         #listen
-        socket.listen(1)
+        self.socket.listen(1)
 
         while True:
-            conn, client_address = socket.accept()
-            self.connList.push(conn)
+            conn, client_address = self.socket.accept()
+            self.connList.append(conn)
 
             try:
                 while True:
 
-                    data = conn.recv(32)
+                    data = conn.recv(1024)
 
-                    data_str = data.Decode('utf-8')
+                    data_str = data.decode('utf-8')
                     print(data_str)
 
                     if data:
                         #parse json to dict
                         json_dict = json.loads(data_str)
 
-                        method = json_dict.method
-                        params = json_dict.params
+                        method = json_dict["method"]
+                        params = json_dict["params"]
 
                         try:
                             result = Call.callable_map[method](params)
@@ -57,8 +58,4 @@ class MyServer:
                         break
 
             finally:
-                conn.close()
-
-
-
-                    
+                conn.close()       

@@ -1,5 +1,7 @@
-import RPC.server.my_server as MyServer
+from my_server import MyServer
 
 def main():
     server = MyServer()
     server.start()
+
+main()

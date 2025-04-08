@@ -1,19 +1,22 @@
+import net from 'node:net';
 import Request from "./request";
 
 class RpcClient {
 
     address: string;
     port: number;
-    request: Request;
+    socket: net.Socket;
+
 
     constructor(address: string, port: number) {
         this.address = address;
         this.port = port;
+        this.socket = net.connect(port, address);
     }
 
     send (input: string): Promise<string> {
-        const method = input[0];
-        const params = input.split(' ').slice(1, input.split('').length);
+
+        const [method, ...params] = input.split(' ');
             
         switch (method) {
             case 'floor':
@@ -32,47 +35,56 @@ class RpcClient {
                 return this.sort(params);
 
             default:
-                return 'function [' + method + '] is not supplied';
+                return new Promise(resolve => resolve('function [' + method + '] is not supplied'));
         }
     }
 
-    floor (params: string[]): string{
+    floor (params: string[]): Promise<string> {
         const request = new Request('floor', params);
         const jsonReq = request.toJson();
-
-        return '';
+        return this.write(jsonReq);
     }
 
-    nroot (params: string[]): string{
-
-        return new Promise((resolve, reject) => {
-            
-        })
+    nroot (params: string[]): Promise<string>{
         const request = new Request('nroot', params);
         const jsonReq = request.toJson();
-
-        return '';
+        return this.write(jsonReq);
     }
 
-    validAnagram (params: string[]): string{
+    validAnagram (params: string[]): Promise<string>{
         const request = new Request('validAnagram', params);
         const jsonReq = request.toJson();
-
-        return '';
+        return this.write(jsonReq);
     }
 
-    reverse (params: string[]): string{
+    reverse (params: string[]): Promise<string>{
         const request = new Request('reverse', params);
         const jsonReq = request.toJson();
-
-        return '';
+        return this.write(jsonReq);
     }
 
-    sort (params: string[]): string{
+    sort (params: string[]): Promise<string>{
         const request = new Request('sort', params);
         const jsonReq = request.toJson();
+        return this.write(jsonReq);
+    }
 
-        return '';
+    write (jsonStr: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+
+            this.socket.once('data', (data: string) => {
+
+                const res = JSON.parse(data);
+                if (res.error) {
+                    reject();
+                    return;
+                }
+
+                resolve(res.result);
+            })
+
+            this.socket.write(jsonStr);
+        }); 
     }
 }
 
