@@ -1,4 +1,4 @@
-import RPC.server.my_server as MyServer
+import my_server as MyServer
 
 def main():
     server = MyServer()
