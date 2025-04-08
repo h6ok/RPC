@@ -1,7 +1,7 @@
 import socket
 import json
 import callable as Call
-import response as Response
+from response import Response
 import os
 
 class MyServer:
