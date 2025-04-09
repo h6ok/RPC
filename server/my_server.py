@@ -34,7 +34,6 @@ class MyServer:
                     data = conn.recv(1024)
 
                     data_str = data.decode('utf-8')
-                    print(data_str)
 
                     if data:
                         #parse json to dict

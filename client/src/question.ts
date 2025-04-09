@@ -1,6 +1,6 @@
 import readline from 'node:readline';
 
-const question = async(): Promise<string> => {
+const rpcQuestion = async(): Promise<string> => {
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
@@ -28,4 +28,20 @@ const question = async(): Promise<string> => {
     })
 }
 
-export default question;
+const question = async(message: string): Promise<string> => {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    });
+
+    return new Promise((resolve) => {
+
+        rl.question(message + '(y/n)', callable => {
+                resolve(callable);
+                rl.close();
+            }
+        );
+    })
+}
+
+export default { rpcQuestion, question };

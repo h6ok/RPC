@@ -10,13 +10,18 @@ const main = async() => {
 
         while (true) {
             try {
-                const input = await question();
+                const input = await question.rpcQuestion();
                 const result = await conn.send(input);
-                console.log(`rpc result is ${result}`);
+                console.log(`SUCCESS: ${result}`);
             }
-            catch {
-                console.log('see you soon!');
-                break;
+            catch (error) {
+                console.log(`ERROR: ${error}`);
+            }
+            finally {
+                const input = await question.question('do you wanna try again?');
+                if (input.toLowerCase().includes('no') || input.toLowerCase() == 'n') {
+                    process.exit(0);
+                }
             }
         }
     }
