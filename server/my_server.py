@@ -52,9 +52,9 @@ class MyServer:
                             resp = Response(None, e)
                             resp_json = resp.to_json()
                             conn.sendall(resp_json.encode())
-
+                    
                     else:
                         break
 
             finally:
-                conn.close()          
+                conn.close()       
