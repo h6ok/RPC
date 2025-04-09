@@ -45,11 +45,18 @@ def validAnagram():
         if not util.confirmAllType(params, str):
             raise TypeError('param type does not match needed')
         
-        for s in range(params[0]):
-            if s not in params[1]:
-                return False
-        return True
+        if len(params[0]) is not len(params[1]):
+            return False
+
+        tempArr = []
+        for s in params[0]:
+            for i in range(len(params[1])):
+                if (s == params[1][i] and i not in tempArr):
+                    tempArr.append(i)
+                    break
+        return len(params[0]) == len(tempArr)
     return func
+
 
 # sort method
 def sort():
@@ -67,28 +74,28 @@ def merge_sort(arr):
     if len(arr) == 1:
         return arr[0]
     
-    left = merge_sort(arr[0: len(arr)/2])
-    right = merge_sort(arr[len(arr)/2+1: len(arr)])
+    left = merge_sort(arr[0: len(arr)//2])
+    right = merge_sort(arr[len(arr)//2: len(arr)])
 
     lindex = 0
     rindex = 0
     result = []
     while lindex < len(left) and rindex < len(right):
         if left[lindex] < right[rindex]:
-            result.push(left[lindex])
+            result.append(left[lindex])
             lindex += 1
 
         else:
-            result.push(right[rindex])
+            result.append(right[rindex])
             rindex += 1
 
     if lindex < len(left):
-        for ls in range(left[lindex: len(left)]):
-            result.push(ls)
+        for ls in left[lindex: len(left)]:
+            result.append(ls)
 
     if rindex < len(right):
-        for rs in range(right[rindex: len(right)]):
-            result.push(rs)
+        for rs in right[rindex: len(right)]:
+            result.append(rs)
     
     return result
 
