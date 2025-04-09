@@ -35,7 +35,7 @@ class RpcClient {
                 return this.sort(params);
 
             default:
-                return new Promise(resolve => resolve('function [' + method + '] is not supplied'));
+                return Promise.reject(`function { ${method} } is not supplied`);
         }
     }
 
@@ -75,8 +75,8 @@ class RpcClient {
             this.socket.once('data', (data: string) => {
 
                 const res = JSON.parse(data);
-                if (res.error) {
-                    reject();
+                if (res.error != 'None') {
+                    reject(res.error);
                     return;
                 }
 

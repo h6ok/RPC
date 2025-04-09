@@ -1,34 +1,36 @@
+import util
+
 # floor method
 def floor():
     def func(params):
-        if len(params > 1):
+        if len(params) > 1:
             raise ValueError('params has more than 2 params. if you invoke floor(x: int), you need 1 param of int')
         
-        if type(params[0]) != int:
+        if not util.confirmAllType([util.try_float(x) for x in params], float):
             raise TypeError('param type does not match needed')
         
-        return 10 * params[0] / 10
+        return int(float(params[0]))
     return func
 
 # root method
 def nroot():
     def func(params):
-        if len(params > 2):
+        if len(params) > 2:
             raise ValueError('params has more than 3 params. if you invoke nroot(x: int, y: int), you need 2 param of int')
         
-        if type(params[0]) != int or type(params[1]) != int:
+        if not util.confirmAllType([util.try_int(x) for x in params], int):
             raise TypeError('param type does not match needed')
         
-        return pow(params[0], 1/params[1])
+        return pow(int(params[1]), 1 / int(params[0]))
     return func
 
 # reverse method
 def reverse():
     def func(params):
-        if len(params > 1):
+        if len(params) > 1:
             raise ValueError('params has more than 2 params. if you invoke reverse(s: str), you need 1 param of str')
         
-        if type(params[0]) != str:
+        if not util.confirmAllType(params, str):
             raise TypeError('param type does not match needed')
         
         return params[0][::-1]
@@ -37,10 +39,10 @@ def reverse():
 # validAnagram method
 def validAnagram():
     def func(params):
-        if len(params > 2):
+        if len(params) > 2:
             raise ValueError('params has more than 3 params. if you invoke validAnagram(s1: str, s2: str), you need 2 param of str')
         
-        if type(params[0]) != str or type(params[1]) != str:
+        if not util.confirmAllType(params, str):
             raise TypeError('param type does not match needed')
         
         for s in range(params[0]):
@@ -55,11 +57,10 @@ def sort():
         if type(params) != list:
             raise TypeError('param type does not match needed')
         
-        for s in params[0]:
-            if type(s) != str:
-                raise TypeError('param type does not match needed')
+        if not util.confirmAllType(params, str):
+            raise TypeError('param type does not match needed')
             
-        return merge_sort(params[0])
+        return merge_sort(params)
     return func
 
 def merge_sort(arr):
